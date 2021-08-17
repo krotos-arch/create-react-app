@@ -19,13 +19,17 @@ const path = require('path');
 const chalk = require('react-dev-utils/chalk');
 const execSync = require('child_process').execSync;
 const spawn = require('react-dev-utils/crossSpawn');
-const { defaultBrowsers } = require('react-dev-utils/browsersHelper');
+const {
+  defaultBrowsers
+} = require('react-dev-utils/browsersHelper');
 const os = require('os');
 const verifyTypeScriptSetup = require('./utils/verifyTypeScriptSetup');
 
 function isInGitRepository() {
   try {
-    execSync('git rev-parse --is-inside-work-tree', { stdio: 'ignore' });
+    execSync('git rev-parse --is-inside-work-tree', {
+      stdio: 'ignore'
+    });
     return true;
   } catch (e) {
     return false;
@@ -34,7 +38,9 @@ function isInGitRepository() {
 
 function isInMercurialRepository() {
   try {
-    execSync('hg --cwd . root', { stdio: 'ignore' });
+    execSync('hg --cwd . root', {
+      stdio: 'ignore'
+    });
     return true;
   } catch (e) {
     return false;
@@ -43,12 +49,16 @@ function isInMercurialRepository() {
 
 function tryGitInit() {
   try {
-    execSync('git --version', { stdio: 'ignore' });
+    execSync('git --version', {
+      stdio: 'ignore'
+    });
     if (isInGitRepository() || isInMercurialRepository()) {
       return false;
     }
 
-    execSync('git init', { stdio: 'ignore' });
+    execSync('git init', {
+      stdio: 'ignore'
+    });
     return true;
   } catch (e) {
     console.warn('Git repo not initialized', e);
@@ -58,7 +68,9 @@ function tryGitInit() {
 
 function tryGitCommit(appPath) {
   try {
-    execSync('git add -A', { stdio: 'ignore' });
+    execSync('git add -A', {
+      stdio: 'ignore'
+    });
     execSync('git commit -m "Initialize project using Create React App"', {
       stdio: 'ignore',
     });
@@ -114,7 +126,9 @@ module.exports = function (
   }
 
   const templatePath = path.dirname(
-    require.resolve(`${templateName}/package.json`, { paths: [appPath] })
+    require.resolve(`${templateName}/package.json`, {
+      paths: [appPath]
+    })
   );
 
   const templateJsonPath = path.join(templatePath, 'template.json');
@@ -132,7 +146,7 @@ module.exports = function (
     console.log(
       chalk.red(
         'Root-level `dependencies` and `scripts` keys in `template.json` were deprecated for Create React App 5.\n' +
-          'This template needs to be updated to use the new `package` key.'
+        'This template needs to be updated to use the new `package` key.'
       )
     );
     console.log('For more information, visit https://cra.link/templates');
@@ -182,8 +196,7 @@ module.exports = function (
 
   // Setup the script rules
   const templateScripts = templatePackage.scripts || {};
-  appPackage.scripts = Object.assign(
-    {
+  appPackage.scripts = Object.assign({
       start: 'react-scripts start',
       build: 'react-scripts build',
       test: 'react-scripts test',
@@ -198,8 +211,7 @@ module.exports = function (
       (acc, [key, value]) => ({
         ...acc,
         [key]: value.replace(/(npm run |npm )/, 'yarn '),
-      }),
-      {}
+      }), {}
     );
   }
 
@@ -322,7 +334,9 @@ module.exports = function (
     console.log();
     console.log(`Installing template dependencies using ${command}...`);
 
-    const proc = spawn.sync(command, args, { stdio: 'inherit' });
+    const proc = spawn.sync(command, args, {
+      stdio: 'inherit'
+    });
     if (proc.status !== 0) {
       console.error(`\`${command} ${args.join(' ')}\` failed`);
       return;
@@ -367,6 +381,13 @@ module.exports = function (
 
   console.log();
   console.log(`Success! Created ${appName} at ${appPath}`);
+
+  console.log(chalk.red('VERY IMPORTANT:'));
+  console.log('Create a .env file at the root of your project with REACT_APP_EMPLOYEE_ID and REACT_APP_POSITION_ID');
+  console.log('  You can find these values in the company dashboard under application settings.');
+  console.log('  https://company.bamboohr.com/settings');
+  console.log();
+
   console.log('Inside that directory, you can run several commands:');
   console.log();
   console.log(chalk.cyan(`  ${displayedCommand} start`));
